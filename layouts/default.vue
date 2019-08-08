@@ -7,11 +7,11 @@
 </template>
  
 <script>
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 export default {
-  components:{
+  components: {
     Header,
     Footer
   }
@@ -19,36 +19,43 @@ export default {
 </script>
  
 <style>
-*{
+* {
   margin: 0;
   padding: 0;
-  font-size:14px;
 }
-ul,ol{
+a,
+p,
+em,
+i {
+  font-size: 14px;
+}
+ul,
+ol {
   list-style: none;
 }
-a{
+a {
   color: inherit;
   text-decoration: none;
 }
-em,i{
+em,
+i {
   font-style: normal;
 }
-.fl{
+.fl {
   float: left;
 }
-.fr{
-  float:right;
+.fr {
+  float: right;
 }
-.clearfix::after{
-  content:".";
-  display:block;
-  clear:both;
+.clearfix::after {
+  content: ".";
+  display: block;
+  clear: both;
   visibility: hidden;
   height: 0;
   line-height: 0;
 }
-.clearfix{
-  *zoom:1;
+.clearfix {
+  *zoom: 1;
 }
 </style>
