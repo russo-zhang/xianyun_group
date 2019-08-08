@@ -1,15 +1,10 @@
 <template>
-<div>
-   子组件
-</div>
+  <div class="index">111</div>
 </template>
- 
+
 <script>
-export default {
- 
-}
+export default {};
 </script>
- 
-<style lang='less' scoped>
- 
+
+<style lang="less" scoped>
 </style>
