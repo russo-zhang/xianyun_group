@@ -4,7 +4,7 @@
    <el-button @click="toDetail">点击查看详情</el-button>
 </div>
 </template>
- 
+
 <script>
 export default {
  methods: {
@@ -14,7 +14,6 @@ export default {
  },
 }
 </script>
- 
-<style lang='less' scoped>
- 
+
+<style lang="less" scoped>
 </style>
