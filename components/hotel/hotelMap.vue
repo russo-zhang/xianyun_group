@@ -6,9 +6,13 @@
 export default {
     data(){
         return{
+<<<<<<< HEAD
             locaArr:[],
             data:74,
             signalArr:[]
+=======
+            locaArr:[]
+>>>>>>> b91ded4ab64f53a6b3e558c3db938f7d79f9e757
         }
     },
     mounted() {
@@ -38,6 +42,7 @@ export default {
         showMap(){
             this.$axios({
             url:'hotels?city=' + this.data
+<<<<<<< HEAD
                 }).then(res=>{
                     console.log(res,456)
                     let temp = res.data.data;
@@ -53,6 +58,17 @@ export default {
                      });
             
                 }
+=======
+            }).then(res=>{
+                console.log(res,456)
+                let temp = res.data.data;
+                temp.forEach(item=>{
+                        this.locaArr.push(item.location)
+                    })
+            })
+            console.log(this.locaArr,112233)
+
+>>>>>>> b91ded4ab64f53a6b3e558c3db938f7d79f9e757
         }
         
     }
