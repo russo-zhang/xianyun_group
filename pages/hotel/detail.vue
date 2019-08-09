@@ -14,7 +14,7 @@
     <div class="title">
       <div class="text">
         <em>{{hotelDetail.name}}</em>
-        <i class="el-icon-star-on" v-for="(item,index) in hotellevel" :key="index"></i>
+        <i class="iconfont icon-crown" v-for="(item,index) in hotellevel" :key="index"></i>
       </div>
       <p>{{hotelDetail.alias}}</p>
       <p>
@@ -68,7 +68,7 @@
     </div>
 
     <!-- 地图模块 -->
-    <DetailMap :hotelDetail="hotelDetail"/>
+    <DetailMap :hotelDetail="hotelDetail" />
 
     <!-- 酒店信息 -->
     <div class="hotelInfo">
@@ -154,7 +154,7 @@
                   <div class="text">
                     <em>环境</em>
                     <br />
-                    <em>{{hotelDetail.scores.environment}}</em>
+                    <em>{{hotelDetail.scores.environment||0}}</em>
                   </div>
                 </el-col>
                 <el-col>
@@ -169,7 +169,7 @@
                   <div class="text">
                     <em>产品</em>
                     <br />
-                    <em>{{hotelDetail.scores.product}}</em>
+                    <em>{{hotelDetail.scores.product||0}}</em>
                   </div>
                 </el-col>
                 <el-col>
@@ -184,7 +184,7 @@
                   <div class="text">
                     <em>服务</em>
                     <br />
-                    <em>{{hotelDetail.scores.service}}</em>
+                    <em>{{hotelDetail.scores.service||0}}</em>
                   </div>
                 </el-col>
               </el-row>
@@ -228,7 +228,7 @@ export default {
   methods: {
     async init() {
       let res = await this.$axios({
-        url: "http://157.122.54.189:9095/hotels?id=4"
+        url: "http://127.0.0.1:1337/hotels?id=" + this.$route.query.id
       });
       this.breadcrumbList = res.data.data[0].breadcrumb.split(">");
       this.hotelDetail = res.data.data[0];
@@ -242,7 +242,10 @@ export default {
 
       // 图片数组
       this.hotelDetail.pics;
-      console.log(res);
+      // console.log(res);
+
+      // 对品牌信息进行判断
+      if (!this.hotelDetail.hotelbrand) this.hotelDetail.hotelbrand = {};
     },
     showBigImg(item) {
       this.hotelBigImg = item;
@@ -335,6 +338,9 @@ export default {
       padding: 0 15px;
       em {
         color: #666;
+      }
+      .el-tag{
+        margin: 0 5px;
       }
     }
   }

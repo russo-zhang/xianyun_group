@@ -24,6 +24,7 @@
               @cell-mouse-enter="locationHover"
               :row-class-name="setRowStyle"
               v-if="showTable==='first'"
+              setCurrentRow
             >
               <el-table-column fixed prop="name" label="地址" width="220"></el-table-column>
               <el-table-column prop="province" label="距离"></el-table-column>
