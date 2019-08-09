@@ -39,9 +39,9 @@
                 <el-col :span="6">
                     <el-tooltip class="item" effect="dark" content="等级均价由平日价格计算的出，节假日会有上浮"         placement="top-start">
                         <span>
-                            <i class="el-icon-check"></i>
-                            <i class="el-icon-check"></i>
-                            <i class="el-icon-check"></i>
+                            <i class="iconfont icon-crown" style="color:yellow"></i>
+                            <i class="iconfont icon-crown" style="color:yellow"></i>
+                            <i class="iconfont icon-crown" style="color:yellow"></i>
                             <i>￥332</i>
                         </span>
                     </el-tooltip>
@@ -49,22 +49,22 @@
                 <el-col :span="6">
                     <el-tooltip class="item" effect="dark" content="等级均价由平日价格计算的出，节假日会有上浮"         placement="top-start">
                     <span>
-                        <i class="el-icon-check"></i>
-                        <i class="el-icon-check"></i>
-                        <i class="el-icon-check"></i>
-                        <i class="el-icon-check"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
                         <i>￥521</i>
                     </span>
                     </el-tooltip>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="7">
                     <el-tooltip class="item" effect="dark" content="等级均价由平日价格计算的出，节假日会有上浮"         placement="top-start">
                     <span>
-                        <i class="el-icon-check"></i>
-                        <i class="el-icon-check"></i>
-                        <i class="el-icon-check"></i>
-                        <i class="el-icon-check"></i>
-                        <i class="el-icon-check"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
+                        <i class="iconfont icon-crown" style="color:yellow"></i>
                         <i>￥762</i>
                     </span>
                     </el-tooltip>

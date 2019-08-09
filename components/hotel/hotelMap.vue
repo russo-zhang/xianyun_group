@@ -6,7 +6,9 @@
 export default {
     data(){
         return{
-            locaArr:[]
+            locaArr:[],
+            data:74,
+            signalArr:[]
         }
     },
     mounted() {
@@ -30,20 +32,27 @@ export default {
         jsapi.charset = 'utf-8';
         jsapi.src = url;
         document.head.appendChild(jsapi);
+        this.showMap()
     },
     methods:{
         showMap(){
             this.$axios({
             url:'hotels?city=' + this.data
-            }).then(res=>{
-                console.log(res,456)
-                let temp = res.data.data;
-                temp.forEach(item=>{
-                        this.locaArr.push(item.location)
-                    })
-            })
-            console.log(this.locaArr)
-
+                }).then(res=>{
+                    console.log(res,456)
+                    let temp = res.data.data;
+                    temp.forEach(item=>{
+                            this.locaArr.push(item.location)
+                        })
+                })
+                console.log(this.locaArr,112233)
+                for(var i=0;i<this.locaArr.length;i++){
+                    var marker = new AMap.Marker({
+                    position: new AMap.LngLat( this.locaArr[i].longitude, this.locaArr[i].latitude),
+                    title: '南京'
+                     });
+            
+                }
         }
         
     }
