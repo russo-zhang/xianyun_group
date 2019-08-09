@@ -31,7 +31,7 @@
 
       <!-- 酒店部分 -->
       <div class="specHotel">
-         <HotelSpec/>
+         <HotelsList v-for="(item,index) in hotelsList" :key="index" :data="item" />
       </div>
 
       <!-- 分页功能 -->
@@ -54,14 +54,16 @@ import HotelSearch from '@/components/hotel/hotelSearch'
 import HotelArea from '@/components/hotel/hotelArea'
 import HotelFilter from '@/components/hotel/hotelFilter'
 import HotelMap from '@/components/hotel/hotelMap'
-import HotelSpec from '@/components/hotel/hotelSpec'
+import HotelsList from "@/components/hotel/hotelsList";
+// import HotelSpec from '@/components/hotel/hotelSpec'
 export default {
    data() {
       return{
          pageNum:1,   //当前页面
          pageSize:4,    //页面容量
          totalPage:0,      //总页面
-         selectCityId:74      //城市id,默认是南京
+         selectCityId:74,      //城市id,默认是南京
+         hotelsList: [],
       }
    },
    components:{
@@ -69,7 +71,7 @@ export default {
       HotelArea,
       HotelFilter,
       HotelMap,
-      HotelSpec
+      HotelsList
    },
    methods:{
       // 页面容量改变时触发
@@ -79,13 +81,17 @@ export default {
       // 当前页面改变时触发
       handleCurrentChange(value){
 
-      }
-      //用来传递备选中的城市id
-      // passSelectId(id){
-      //    this.selectCityId = id
-      // }
+      },
+      async getHotelsList() {
+      let res = await this.$axios({ url: "/hotels?&city=74", });
+      this.hotelsList = res.data.data;
+      // console.log(this.hotelsList);
+    },
+   },
+   mounted() {
+    this.getHotelsList();
 
-   }
+  }
 }
 </script>
  
@@ -117,6 +123,6 @@ export default {
    }
    .paginationBox{
       margin-top:20px;
-   }
-}
+   } 
+};
 </style>
