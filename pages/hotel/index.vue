@@ -20,18 +20,19 @@
 
          <!-- 地图部分 -->
          <div class="gaodeMap">
-            <HotelMap/>
+            <HotelMap  :data="locaArr"/>
          </div>
       </div>  
 
       <!-- 酒店过滤部分 -->
       <div class="hotelFilter">
-         <HotelFilter/>
+         <HotelFilter :data="cacheHotelList"
+          @setNewDataList="setNewDataList"/>
       </div>
 
       <!-- 酒店部分 -->
       <div class="specHotel">
-         <HotelsList v-for="(item,index) in hotelsList" :key="index" :data="item" />
+         <HotelsList v-for="(item,index) in dataList" :key="index" :data="item" />
       </div>
 
       <!-- 分页功能 -->
@@ -54,8 +55,7 @@ import HotelSearch from '@/components/hotel/hotelSearch'
 import HotelArea from '@/components/hotel/hotelArea'
 import HotelFilter from '@/components/hotel/hotelFilter'
 import HotelMap from '@/components/hotel/hotelMap'
-import HotelsList from "@/components/hotel/hotelsList";
-// import HotelSpec from '@/components/hotel/hotelSpec'
+import HotelsList from "@/components/hotel/hotelsList"
 export default {
    data() {
       return{
@@ -64,6 +64,10 @@ export default {
          totalPage:0,      //总页面
          selectCityId:74,      //城市id,默认是南京
          hotelsList: [],
+         cacheHotelList:[],      //用于缓存
+         dataList:[]  ,       //用于分页
+
+         locaArr:[]     //用于向地图传递参数
       }
    },
    components:{
@@ -76,21 +80,52 @@ export default {
    methods:{
       // 页面容量改变时触发
       handleSizeChange(value){
-
+         this.pageSize = value
+         this.showDataList()
       },
       // 当前页面改变时触发
       handleCurrentChange(value){
-
+         this.pageNum = value
+         this.showDataList()
       },
+      showDataList(){
+         this.dataList = this.hotelsList.slice((this.pageNum-1)*this.pageSize,this.pageNum*this.pageSize)
+      },
+
+      setNewDataList(arr){
+         if(arr){
+               this.pageNum = 1;
+               this.hotelsList = arr
+               this.totalPage = arr.length
+         }
+         this.showDataList()
+      },
+      showMap(){
+            this.$axios({
+            url:'hotels?city=74'
+                }).then(res=>{
+                    console.log(res,456)
+                    let temp = res.data.data;
+                    temp.forEach(item=>{
+                        this.locaArr.push(item.location)
+                    })
+                })
+                console.log(this.locaArr,112233)
+        },
+
       async getHotelsList() {
       let res = await this.$axios({ url: "/hotels?&city=74", });
       this.hotelsList = res.data.data;
+      this.dataList = [...this.hotelsList];
+      this.cacheHotelList = [...res.data.data];
+      this.totalPage = this.hotelsList.length
       // console.log(this.hotelsList);
     },
    },
    mounted() {
-    this.getHotelsList();
-
+   this.getHotelsList();
+   this.showDataList();
+   this.showMap()
   }
 }
 </script>
