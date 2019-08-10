@@ -85,7 +85,7 @@ export default {
   },
   methods:{
      toCreate(){
-      this.$route({path:"/post/create"})
+      this.$router.push({path:"/post/create"})
     }
   },
   mounted() {

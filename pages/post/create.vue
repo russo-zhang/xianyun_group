@@ -1,59 +1,100 @@
 <template>
   <div class="header">
-    <div class="psp">
-      <span>发表新攻略</span>
-      <i>
-        <p>草稿箱 ( 0 )</p>
-      </i>
-      <h6>分享你的个人游记 , 让更多人看到哦 !</h6>
-      <el-input v-model="input" placeholder="请输入标题"></el-input>
-    </div>
-    <section class="container">
-      <div
-        class="quill-editor"
-        :content="content"
-        @change="onEditorChange($event)"
-        @blur="onEditorBlur($event)"
-        @focus="onEditorFocus($event)"
-        @ready="onEditorReady($event)"
-        v-quill:myQuillEditor="editorOption"
-      ></div>
-    </section>
-    <div class="select-city">
-      <div>
-        <span>选择城市</span>
-        <el-autocomplete
-          v-model="state"
-          :fetch-suggestions="querySearchAsync"
-          placeholder="请输入游玩城市"
-          @select="handleSelect"
-        ></el-autocomplete>
-      </div>
-    </div>
-    <el-row>
-      <el-button type="text" @click="open">发布</el-button>
-      <span>或者</span>
-      <el-link type="warning">保存到草稿</el-link>
-    </el-row>
+    <el-container>
+      <el-main>
+        <div class="psp">
+          <span>发表新攻略</span>
+          <i v-if="false">
+            <p>草稿箱 {{( draftNum )||""}}</p>
+          </i>
+          <h6>分享你的个人游记 , 让更多人看到哦 !</h6>
+          <el-input v-model="article.title" placeholder="请输入标题"></el-input>
+        </div>
+        <section class="container">
+          <div
+            class="quill-editor"
+            :content="article.content"
+            @change="onEditorChange($event)"
+            @blur="onEditorBlur($event)"
+            @focus="onEditorFocus($event)"
+            @ready="onEditorReady($event)"
+            v-quill:myQuillEditor="editorOption"
+          ></div>
+        </section>
+        <div class="select-city">
+          <div>
+            <span>选择城市</span>
+            <el-autocomplete
+              v-model="article.cityName"
+              :fetch-suggestions="querySearchAsync"
+              placeholder="请输入游玩城市"
+              @select="handleSelect"
+            ></el-autocomplete>
+          </div>
+        </div>
+        <el-row>
+          <el-button type="text" @click="publish">发布</el-button>
+          <span>或者</span>
+          <el-link type="warning" @click="saveToDraft">保存到草稿</el-link>
+        </el-row>
+      </el-main>
+
+      <el-aside width="200px">
+        <div class="draft">
+          <p>
+            草稿箱
+            <span>({{draftNum}})</span>
+          </p>
+          <div
+            class="content"
+            v-for="(item,index) in draftList"
+            :key="index"
+            @click="showDraft(item)"
+            @dblclick="delDraft(index)"
+            @dblclick.stop="showDraft"
+          >
+            {{item.title}}
+            <i class="el-icon-edit" v-if="item.title"></i>
+            <br />
+            <em>{{item.time}}</em>
+          </div>
+        </div>
+      </el-aside>
+    </el-container>
+    <input type="hidden" :value="getDraftList" />
   </div>
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
-      input: "",
-      restaurants: [],
-      state: "",
+      article: {
+        title: "",
+        content: "",
+        city: "",
+        cityName: ""
+      },
+      draftList: [
+        {
+          title: "",
+          content: "",
+          city: "",
+          time: "",
+          cityName: ""
+        }
+      ],
+      draftNum: 0,
+      timer: "",
       timeout: null,
-      content: "<p>I am Example</p>",
       editorOption: {
         // some quill options
         modules: {
           toolbar: [
             ["bold", "italic", "underline", "strike"],
-            [{header:1},{header:2}],
-            ["image","video"]
+            [{ header: 1 }, { header: 2 }],
+            ["image", "video"]
           ]
         }
       }
@@ -64,41 +105,114 @@ export default {
     setTimeout(() => {
       this.content = "";
     }, 3000);
-
-    // this.$axios({
-    //   url: "/post/create"
-    // }).then(res => {
-    //   if (res.stauts != 200) return;
-    //   this.discount = res.data.data;
-    //   this.discount[0].cover = this.discount[1].cover;
-    // });
+  },
+  computed: {
+    getDraftList() {
+      // this.draftList = [...this.$store.state.post.draftList];
+      this.draftList = JSON.parse(
+        JSON.stringify(this.$store.state.post.draftList)
+      );
+      this.draftNum = this.draftList.length;
+    }
   },
   methods: {
-    querySearchAsync() {},
-    open() {
-      this.$alert("这是一段内容", "提示", {
+    // 查找城市
+    async querySearchAsync(queryString, callback) {
+      if (!queryString) return;
+      let res = await this.$axios({
+        url: "/airs/city",
+        params: { name: queryString }
+      });
+      // console.log(res)
+      if (res.data.data.length === 0)
+        return this.$message.warning("查找不到这个城市");
+      let arr = res.data.data.map((item, index) => {
+        // item.value = item.name.replace("市", "");
+        item.value = item.name;
+        return item;
+      });
+      // this.city = res.data.data[0].name;
+      // this.article.city=res.data.data[0].id
+      // callback(res.data.data);
+      callback(arr);
+    },
+
+    // 发布文章
+    async publish() {
+      let res = await this.$axios({
+        url: "/posts",
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + this.$store.state.users.userInfo.token
+        },
+        data: this.article
+      });
+      // console.log(res);
+      if (res.data.status != 0)
+        return this.$message.error("文章新增失败,请稍后重试");
+      this.$message.success(res.data.message);
+      // 清空文章内容
+      for (var key in this.article) {
+        this.article[key] = "";
+      }
+      this.city = "";
+    },
+
+    //保存到草稿
+    saveToDraft() {
+      let article = JSON.parse(JSON.stringify(this.article));
+      let time = moment().format("YYYY-MM-DD");
+      article.time = time;
+      this.draftList.push(article);
+      this.draftNum = this.draftList.length;
+      let draftList = JSON.parse(JSON.stringify(this.draftList));
+      this.$store.commit("post/setDraftList", draftList);
+      for (var key in this.article) {
+        this.article[key] = "";
+      }
+    },
+
+    //显示草稿
+    showDraft(draft) {
+      this.article = draft;
+    },
+    //删除草稿
+    delDraft(index) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
-        callback: action => {
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+          this.draftList.splice(index, 1);
+          this.$store.commit("post/setDraftList", this.draftList);
+        })
+        .catch(() => {
           this.$message({
             type: "info",
-            message: `action: ${action}`
+            message: "已取消删除"
           });
-        }
-      });
+        });
     },
-    handleSelect() {},
+    handleSelect(value) {
+      this.article.city = value.id;
+    },
     onEditorBlur(editor) {
-      console.log("editor blur!", editor);
+      // console.log("editor blur!", editor);
     },
     onEditorFocus(editor) {
-      console.log("editor focus!", editor);
+      // console.log("editor focus!", editor);
     },
     onEditorReady(editor) {
-      console.log("editor ready!", editor);
+      // console.log("editor ready!", editor);
     },
     onEditorChange({ editor, html, text }) {
-      console.log("editor change!", editor, html, text);
-      this.content = html;
+      // console.log("editor change!", editor, html, text);
+      this.article.content = html;
     }
   }
 };
@@ -107,9 +221,26 @@ export default {
 <style scoped lang="less">
 .header {
   width: 1000px;
-  margin: 0 auto;
-  padding: 20px 0;
-  height: 1000px;
+  margin: 20px auto;
+  // padding: 20px 0;
+  // height: 1000px;
+}
+.el-aside {
+  .draft {
+    padding: 15px;
+    border: 1px solid #ccc;
+    p {
+      font-size: 16px;
+    }
+    .content {
+      margin: 10px 0;
+      cursor: pointer;
+      em {
+        font-size: 12px;
+        color: #b5a8a0;
+      }
+    }
+  }
 }
 .psp span {
   font-size: 22px;
