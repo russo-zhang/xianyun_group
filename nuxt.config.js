@@ -26,6 +26,9 @@ export default {
     'element-ui/lib/theme-chalk/index.css',
     'assets/css/main.css',
     'assets/css/font-icon/iconfont.css',
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -33,7 +36,8 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/axios',
-    { src: '~/plugins/localStorage.js', ssr: false }
+    { src: '~/plugins/localStorage.js', ssr: false },
+    { src: '~/plugins/vue-quill-editor.js', ssr: false},
   ],
   /*
   ** Nuxt.js dev-modules
