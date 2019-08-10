@@ -25,7 +25,7 @@
           <div>
             <span>选择城市</span>
             <el-autocomplete
-              v-model="article.cityName"
+              v-model="cityName"
               :fetch-suggestions="querySearchAsync"
               placeholder="请输入游玩城市"
               @select="handleSelect"
@@ -74,8 +74,8 @@ export default {
         title: "",
         content: "",
         city: "",
-        cityName: ""
       },
+      cityName:"",
       draftList: [
         {
           title: "",
@@ -139,6 +139,13 @@ export default {
 
     // 发布文章
     async publish() {
+      for (var key in this.article) {
+       if( this.article[key] == "") {
+         
+         return this.$message.error(key+" can not be empty");
+       }
+      }
+      console.log(this.article)
       let res = await this.$axios({
         url: "/posts",
         method: "POST",
@@ -160,6 +167,9 @@ export default {
 
     //保存到草稿
     saveToDraft() {
+      for (var key in this.article) {
+       if( this.article[key] == "") return this.$message.error(key+"不能为空");;
+      }
       let article = JSON.parse(JSON.stringify(this.article));
       let time = moment().format("YYYY-MM-DD");
       article.time = time;

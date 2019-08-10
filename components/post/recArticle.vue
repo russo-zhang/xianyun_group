@@ -90,8 +90,8 @@ export default {
   },
   mounted() {
     this.$axios({
-      url: "/posts",
-      params: {}
+      url: "http://157.122.54.189:9095/posts",
+      params: { }
     }).then(res => {
       this.listData = res.data.data;
       const { total } = res.data;

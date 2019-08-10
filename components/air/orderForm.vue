@@ -70,11 +70,11 @@ export default {
   data() {
     return {
       passInfo: {
-        users: [{ username: "tom", id: "123" }],
+        users: [{ username: "", id: "" }],
         insurances: [],
-        contactName: "tom",
-        contactPhone: "135000000",
-        captcha: "000000",
+        contactName: "",
+        contactPhone: "",
+        captcha: "",
         invoice: false,
         seat_xid: "",
         air: ""
@@ -112,6 +112,10 @@ export default {
 
     // 发送验证码
     async sendCaptcha() {
+      let patt = /^1[3,5,7,8]\d{9}$/;
+      if (!patt.test(this.passInfo.contactPhone))
+        return this.$message.error("请输入正确格式的手机号");
+
       let i = 10;
       let timer = setInterval(() => {
         i--;
@@ -133,6 +137,29 @@ export default {
 
     // 提交订单
     async submitOrder() {
+      let flag = true;
+      for (let key in this.passInfo) {
+        if (this.passInfo[key] == "") {
+          flag = true;
+          if (key == "insurances" || key == "invoice") {
+            flag = false;
+          }
+          if (flag) {
+            return this.$message.error(key + " can not be empty");
+          }
+        }
+      }
+      flag = true;
+      this.passInfo.users.some((item, index) => {
+        for (let key in item) {
+          if (item[key] == "") {        
+            this.$message.error(key + " can not be empty");
+            flag = false;
+            return true;
+          }
+        }
+      });     
+      if (!flag) return 
       let res = await this.$axios({
         url: "/airorders",
         headers: {
