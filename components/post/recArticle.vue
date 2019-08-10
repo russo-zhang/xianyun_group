@@ -6,7 +6,7 @@
         <el-button class="btn" type="primary" icon="el-icon-edit" @click="toCreate">写游记</el-button>
       </el-row>
     </div>
-    <nuxt-link v-for="(item,index) in listData" :key="index" to="/">
+    <nuxt-link v-for="(item,index) in listData" :key="index" :to="`/post/article?id=${item.id}`">
       <div class="content">
         <el-row v-if="item.images.length<=1" type="flex">
           <el-col class="content-left" :span="8">
@@ -83,9 +83,9 @@ export default {
       total: 0
     };
   },
-  methods:{
-     toCreate(){
-      this.$router.push({path:"/post/create"})
+  methods: {
+    toCreate() {
+      this.$router.push({ path: "/post/create" });
     }
   },
   mounted() {
@@ -93,11 +93,10 @@ export default {
       url: "/posts",
       params: {}
     }).then(res => {
-      console.log(res.data.data);
       this.listData = res.data.data;
       const { total } = res.data;
       this.total = total;
-    })
+    });
   },
   watch: {
     searchList() {
@@ -133,6 +132,7 @@ export default {
   .content {
     padding: 20px 0;
     border-bottom: 1px solid #ccc;
+
     .content-left-img {
       //   box-sizing: border-box;
       overflow: hidden;
