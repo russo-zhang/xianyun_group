@@ -140,7 +140,7 @@ export default {
       height: 150px;
       img {
         width: 30%;
-        // height: 150px;
+        height: 150px;
         margin-right: 20px;
       }
     }

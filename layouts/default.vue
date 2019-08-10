@@ -9,6 +9,7 @@
 <script>
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import Moment from "moment"
 
 export default {
   components: {
