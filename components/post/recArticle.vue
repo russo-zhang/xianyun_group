@@ -83,9 +83,9 @@ export default {
       total: 0
     };
   },
-  methods:{
-     toCreate(){
-      this.$route({path:"/post/create"})
+  methods: {
+    toCreate() {
+      this.$route({ path: "/post/create" });
     }
   },
   mounted() {
@@ -96,7 +96,7 @@ export default {
       this.listData = res.data.data;
       const { total } = res.data;
       this.total = total;
-    })
+    });
   },
   watch: {
     searchList() {
