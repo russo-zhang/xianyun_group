@@ -3,6 +3,14 @@
     <div class="title">
       <span>评论</span>
     </div>
+    <div v-if="defaultReply.id !='' ">
+      <el-tag
+        @close="delReply"
+        :key="defaultReply.id"
+        closable
+        style="margin-bottom:10px"
+      >回复: @{{defaultReply.account.nickname}}</el-tag>
+    </div>
     <div class="areaText">
       <el-input
         style="margin-bottom:12px;"
@@ -39,6 +47,17 @@
 
 <script>
 export default {
+  props: {
+    reply: {
+      type: Object,
+      default: {
+        id: "",
+        account: {
+          nickname: ""
+        }
+      }
+    }
+  },
   data() {
     return {
       textarea: "",
@@ -49,9 +68,17 @@ export default {
       content: {
         content: "",
         pics: [],
-        post: 0
+        post: 0,
+        follow: null
       },
-      list: []
+      list: [],
+      //默认回复对象数据
+      defaultReply: {
+        account: {
+          nickname: ""
+        },
+        id: ""
+      }
     };
   },
   methods: {
@@ -65,14 +92,17 @@ export default {
         }
       });
     },
+    // 评论
     btn() {
+      console.log(this.content);
       this.$axios({
         url: "/comments",
         method: "post",
         data: {
           content: this.content.content,
           pics: this.content.pics,
-          post: this.$route.query.id
+          post: this.$route.query.id,
+          follow: this.content.follow
         },
         headers: { Authorization: `Bearer ${this.token}` }
       }).then(res => {
@@ -98,11 +128,23 @@ export default {
     },
     error(err, file, fileList) {
       console.log(err, file, fileList);
+    },
+    // 清空回复
+    delReply() {
+      this.defaultReply.id = "";
+      this.content.follow = null;
     }
   },
   mounted() {
     let obj = JSON.parse(localStorage.store);
     this.token = obj.users.userInfo.token;
+  },
+  watch: {
+    // 监听回复对象
+    reply() {
+      this.defaultReply = this.reply;
+      this.content.follow = this.defaultReply.id;
+    }
   }
 };
 </script>

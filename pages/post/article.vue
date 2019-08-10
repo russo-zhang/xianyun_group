@@ -5,21 +5,23 @@
         <el-col :span="16">
           <ArticleCrumbs />
           <ArticleContent />
-          <ArticlePostComment @getList="getList" />
+          <ArticlePostComment @getList="getList" :reply="reply" />
           <!-- <ArticleComment v-for="(item,index) in list" :key="index" :list="item" /> -->
-          <div v-if="isRouter" class="div">
+          <div v-if="list.length != 0">
             <ArticleComment
+              @getReply="getReply"
               style="padding:20px;"
               v-for="(item,index) in list"
               :key="index"
               :list="[item]"
             />
           </div>
+          <p style="padding:20px 0;text-align:center;border:1px solid #ccc" v-else>暂时没有评论</p>
 
           <!-- 分页 -->
 
           <el-pagination
-            style="margin-bottom:20px"
+            style="margin:20px 0"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="pageNum"
@@ -59,21 +61,22 @@ export default {
       pageNum: 0,
       pageSize: 2,
       start: 0,
-      isRouter: true
+      //回复对象信息
+      reply: {}
     };
   },
   methods: {
     handleSizeChange(v) {
       this.pageSize = v;
+      console.log(v);
       this.$axios({
         url: "/posts/comments",
         params: {
-          post:  this.$route.query.id,
+          post: this.$route.query.id,
           _limit: v, //显示的条数
-          _start: this.pageNum //哪里开始
+          _start: (this.pageNum - 1) * v //哪里开始
         }
       }).then(res => {
-        console.log(res.data.data);
         this.list = res.data.data;
         this.total = res.data.total;
       });
@@ -83,7 +86,7 @@ export default {
       this.$axios({
         url: "/posts/comments",
         params: {
-          post:  this.$route.query.id,
+          post: this.$route.query.id,
           _limit: this.pageSize,
           _start: (v - 1) * this.pageSize
         }
@@ -93,8 +96,10 @@ export default {
       });
     },
     getList(value) {
-      console.log(value);
       this.list = value;
+    },
+    getReply(data) {
+      this.reply = data;
     }
   },
   mounted() {
@@ -107,10 +112,8 @@ export default {
       }
     }).then(res => {
       this.list = res.data.data;
-      // console.log(JSON.stringify(this.list));
-      // this.list = JSON.parse(JSON.stringify(this.list));
-      console.log(this.list);
       this.total = res.data.total;
+      console.log(this.list);
     });
   }
 };
