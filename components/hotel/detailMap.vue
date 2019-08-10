@@ -132,11 +132,6 @@ export default {
         td {
           border-bottom: none !important;
         }
-        //   &:hover {
-        //     td {
-        //       background-color: white !important;
-        //     }
-        //   }
       }
     }
   }

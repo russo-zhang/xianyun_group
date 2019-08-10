@@ -10,7 +10,7 @@
                         <nuxt-link to="#" v-for="(item,index) in scenics" :key='index'>{{item.name}}</nuxt-link>
                     </div>
                     <span @click="showAllPalce" class="showAllPalce">
-                        <i class="el-icon-d-arrow-left"></i>
+                        <i class="el-icon-d-arrow-right" :class="{rotateIcon:hideFlg==true}"></i>
                         等43个区域
                     </span>
                 </el-col>
@@ -93,6 +93,7 @@ export default {
     methods:{
         showAllPalce(){
             this.hideFlg = !this.hideFlg
+            // this.$refs.rotateIcon.style.transform = rotateZ(90deg)
         }
     },
     mounted() {
@@ -103,8 +104,6 @@ export default {
             this.scenics = res.data.data[0].scenics
             // console.log(this.scenics)
         })
-
-       
     }
 
 }
@@ -136,6 +135,9 @@ export default {
     i{
         transform:rotateZ(90deg);
         color:orange;
+    }
+    .rotateIcon{
+        transform:rotateZ(270deg);
     }
 }
 .strategy{
