@@ -7,6 +7,8 @@ export default function({$axios,redirect}){
       Message.warning({message})
     }else if(statusCode===401||statusCode===403){
       redirect("/login")
+    }else if(statusCode===404){
+      // redirect("/empty")
     }
   })
 }

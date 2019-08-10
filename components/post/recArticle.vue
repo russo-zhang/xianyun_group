@@ -3,7 +3,7 @@
     <div class="title">
       <el-row type="flex" justify="space-between">
         <h3>推荐攻略</h3>
-        <el-button class="btn" type="primary" icon="el-icon-edit">写游记</el-button>
+        <el-button class="btn" type="primary" icon="el-icon-edit" @click="toCreate">写游记</el-button>
       </el-row>
     </div>
     <nuxt-link v-for="(item,index) in listData" :key="index" :to="`/post/article?id=${item.id}`">
@@ -83,6 +83,11 @@ export default {
       total: 0
     };
   },
+  methods:{
+     toCreate(){
+      this.$route({path:"/post/create"})
+    }
+  },
   mounted() {
     this.$axios({
       url: "/posts",
@@ -91,7 +96,7 @@ export default {
       this.listData = res.data.data;
       const { total } = res.data;
       this.total = total;
-    });
+    })
   },
   watch: {
     searchList() {
@@ -130,10 +135,12 @@ export default {
 
     .content-left-img {
       //   box-sizing: border-box;
+      overflow: hidden;
       margin-top: 10px;
+      height: 150px;
       img {
         width: 30%;
-        height: 150px;
+        // height: 150px;
         margin-right: 20px;
       }
     }
