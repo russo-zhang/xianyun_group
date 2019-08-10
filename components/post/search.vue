@@ -10,6 +10,7 @@
         <li>广州</li>
         <li>上海</li>
         <li>北京</li>
+        <li>清空</li>
       </ul>
     </div>
   </div>
@@ -43,7 +44,7 @@ export default {
       });
     },
     recCity(e) {
-      if (e.target.innerText == "推荐:") {
+      if (e.target.innerText == "推荐:" || e.target.innerText === "清空") {
         this.searchContent = "";
       } else {
         this.searchContent = e.target.innerText;
@@ -72,15 +73,15 @@ export default {
       }
     },
     clickCity() {
-       this.$axios({
-          url: "/posts",
-          params: {
-            city: this.clickCity
-          }
-        }).then(res => {
-          this.searchList = res.data;
-          this.$emit("getSearchList", this.searchList);
-        });
+      this.$axios({
+        url: "/posts",
+        params: {
+          city: this.clickCity
+        }
+      }).then(res => {
+        this.searchList = res.data;
+        this.$emit("getSearchList", this.searchList);
+      });
     }
   }
 };
