@@ -8,7 +8,7 @@ export default function({$axios,redirect}){
     }else if(statusCode===401||statusCode===403){
       redirect("/login")
     }else if(statusCode===404){
-      // redirect("/empty")
+      redirect("/empty")
     }
   })
 }
