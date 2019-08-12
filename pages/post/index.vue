@@ -15,6 +15,7 @@
 </template>
 
 <script>
+//引入文件
 import Hot from "@/components/post/hot.vue";
 import Search from "@/components/post/search.vue";
 import RecArticle from "@/components/post/recArticle.vue";
