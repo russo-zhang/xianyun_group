@@ -59,10 +59,10 @@
     <!-- :current-page="currentPage4" -->
     <el-pagination
       style="margin:15px 0;"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="100"
-      layout="total, sizes, prev, pager, next, jumper"
+      :current-page="currentPage"
+      layout=" prev, pager, next"
       :total="total"
+      @current-change="handleCurrentChange"
     ></el-pagination>
   </div>
 </template>
@@ -80,23 +80,35 @@ export default {
       // 储存文章列表
       listData: [],
       //   总文章数量
-      total: 0
+      total: 0,
+      currentPage: 1,
+      start: 0
     };
   },
   methods: {
     toCreate() {
       this.$router.push({ path: "/post/create" });
+    },
+    handleCurrentChange(v) {
+      this.start = (v - 1) * 3;
+      this.init();
+    },
+    init() {
+      this.$axios({
+        url: `http://157.122.54.189:9095/posts?_start=${this.start}&_limit=3`
+        // params: {
+        //   _start: this._start,
+        //   _limit: this._limit
+        // }
+      }).then(res => {
+        this.listData = res.data.data;
+        const { total } = res.data;
+        this.total = total;
+      });
     }
   },
   mounted() {
-    this.$axios({
-      url: "http://157.122.54.189:9095/posts",
-      params: { }
-    }).then(res => {
-      this.listData = res.data.data;
-      const { total } = res.data;
-      this.total = total;
-    });
+    this.init();
   },
   watch: {
     searchList() {

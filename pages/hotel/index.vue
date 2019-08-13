@@ -114,7 +114,7 @@ export default {
         },
 
       async getHotelsList() {
-      let res = await this.$axios({ url: "/hotels?&city=74", });
+      let res = await this.$axios({ url: "http://157.122.54.189:9095/hotels?&city=74", });
       this.hotelsList = res.data.data;
       this.dataList = [...this.hotelsList];
       this.cacheHotelList = [...res.data.data];
